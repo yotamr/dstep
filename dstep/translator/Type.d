@@ -27,8 +27,9 @@ body
 
     with (CXTypeKind)
     {
-        if (type.kind == CXType_BlockPointer || type.isFunctionPointerType)
-            result = translateFunctionPointerType(type);
+        if (type.kind == CXType_BlockPointer || type.isFunctionPointerType || type.kind == CXType_FunctionProto) {
+            result = translateFunctionType(type);
+        }
 
         else if (type.kind == CXType_ObjCObjectPointer && !type.isObjCBuiltinType)
             result = translateObjCObjectPointerType(type);
@@ -59,7 +60,7 @@ body
                 case CXType_ConstantArray: result = translateConstantArray(type, rewriteIdToObjcObject); break;
                 case CXType_Unexposed: result = translateUnexposed(type, rewriteIdToObjcObject); break;
 
-                default: result = translateType(type.kind, rewriteIdToObjcObject);
+            default: result = translateType(type.kind, rewriteIdToObjcObject);
             }
     }
 
@@ -209,14 +210,20 @@ body
     return result;
 }
 
-string translateFunctionPointerType (Type type)
+string translateFunctionType (Type type)
 in
 {
-    assert(type.kind == CXTypeKind.CXType_BlockPointer || type.isFunctionPointerType);
+    assert(type.kind == CXTypeKind.CXType_BlockPointer || type.isFunctionPointerType || type.kind == CXTypeKind.CXType_FunctionProto);
 }
 body
 {
-    auto func = type.pointeeType.func;
+
+    FuncType func;
+    if (type.kind  == CXTypeKind.CXType_FunctionProto) {
+        func = type.func;
+    } else {
+        func = type.pointeeType.func;
+    }
 
     Parameter[] params;
     params.reserve(func.arguments.length);
