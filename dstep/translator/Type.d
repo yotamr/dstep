@@ -257,11 +257,11 @@ string translateType (CXTypeKind kind, bool rewriteIdToObjcObject = true)
     with (CXTypeKind)
         switch (kind)
         {
-            case CXType_Invalid: return "<unimplemented>";
-            case CXType_Unexposed: return "<unimplemented>";
+            case CXType_Invalid: return "<invalid>";
+            case CXType_Unexposed: return "<unexposed>";
             case CXType_Void: return "void";
             case CXType_Bool: return "bool";
-            case CXType_Char_U: return "<unimplemented>";
+            case CXType_Char_U: return "<charu>";
             case CXType_UChar: return "ubyte";
             case CXType_Char16: return "wchar";
             case CXType_Char32: return "dchar";
@@ -273,7 +273,7 @@ string translateType (CXTypeKind kind, bool rewriteIdToObjcObject = true)
                 return "c_ulong";
 
             case CXType_ULongLong: return "ulong";
-            case CXType_UInt128: return "<unimplemented>";
+            case CXType_UInt128: return "<uint128>";
             case CXType_Char_S: return "char";
             case CXType_SChar: return "byte";
             case CXType_WChar: return "wchar";
@@ -285,13 +285,13 @@ string translateType (CXTypeKind kind, bool rewriteIdToObjcObject = true)
                 return "c_long";
 
             case CXType_LongLong: return "long";
-            case CXType_Int128: return "<unimplemented>";
+            case CXType_Int128: return "<int128>";
             case CXType_Float: return "float";
             case CXType_Double: return "double";
             case CXType_LongDouble: return "real";
             case CXType_NullPtr: return "null";
-            case CXType_Overload: return "<unimplemented>";
-            case CXType_Dependent: return "<unimplemented>";
+            case CXType_Overload: return "<overload>";
+            case CXType_Dependent: return "<dependent>";
             case CXType_ObjCId: return rewriteIdToObjcObject ? "ObjcObject" : "id";
             case CXType_ObjCClass: return "Class";
             case CXType_ObjCSel: return "SEL";
@@ -311,7 +311,7 @@ string translateType (CXTypeKind kind, bool rewriteIdToObjcObject = true)
             case CXType_VariableArray:
             case CXType_DependentSizedArray:
             case CXType_MemberPointer:
-                return "<unimplemented>";
+                return "<" ~ kind.toString() ~ ">";
 
             default: assert(0, "Unhandled type kind " ~ kind.toString);
         }
