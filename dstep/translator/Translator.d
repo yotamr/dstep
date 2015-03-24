@@ -71,7 +71,6 @@ class Translator
 
             output.newContext();
             auto code = translate(cursor, parent);
-
             with (CXCursorKind)
                 switch (cursor.kind)
                 {

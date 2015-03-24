@@ -36,27 +36,11 @@ class Record (Data) : Declaration
                     switch (cursor.kind)
                     {
                         case CXCursor_FieldDecl:
-                            if (!cursor.type.isExposed && cursor.type.declaration.isValid)
-                            {
-                                auto def = cursor.type.declaration.definition;
-                                auto known = def in this.recordDefinitions;
+                            translateVariable(cursor, context);
+                            break;
 
-                                if (!known)
-                                {
-                                    output.newContext();
-                                    output.currentContext.indent in {
-                                        context.instanceVariables ~= translator.translate(cursor.type.declaration);
-                                    };
-                                }
-
-                                if (cursor.type.declaration.type.isEnum || !cursor.type.isAnonymous)
-                                    translateVariable(cursor, context);
-                            }
-
-                            else
-                                translateVariable(cursor, context);
-                        break;
-
+                    case CXCursor_StructDecl:
+                        translateStructDecl(cursor, context);
                         default: break;
                     }
             }
@@ -68,7 +52,7 @@ private:
     string writeRecord (string name, void delegate (Data context) dg)
     {
         auto context = new Data;
-        
+
         if (cursor.isDefinition)
             this.recordDefinitions[cursor] = true;
         else
@@ -79,6 +63,12 @@ private:
         dg(context);
 
         return context.data;
+    }
+
+    void translateStructDecl (Cursor cursor, Data context)
+    {
+        output.newContext();
+        context.instanceVariables ~= translator.translate(cursor);
     }
 
     void translateVariable (Cursor cursor, Data context)

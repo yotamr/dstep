@@ -48,6 +48,6 @@ abstract class Declaration
     @property string spelling ()
     {
         auto name = cursor.spelling;
-        return name.isPresent || parent.isEmpty ? name : generateAnonymousName(cursor);
+        return name.isPresent ? name : generateAnonymousName(cursor);
     }
 }

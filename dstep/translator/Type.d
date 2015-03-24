@@ -54,8 +54,9 @@ body
                 case CXType_ObjCInterface:
                     result = type.spelling;
 
-                    if (result.isEmpty)
+                    if (result.isEmpty) {
                         result = getAnonymousName(type.declaration);
+                    }
 
                     handleInclude(type);
                 break;
@@ -196,7 +197,6 @@ body
 {
     auto array = type.array;
     auto elementType = translateType(array.elementType, rewriteIdToObjcObject);
-
     return elementType ~ '[' ~ array.size.toString ~ ']';
 }
 
