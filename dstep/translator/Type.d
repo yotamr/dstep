@@ -178,13 +178,13 @@ in
 }
 body
 {
-    auto declaration = type.declaration;
+    auto declaration = type.canonicalType.declaration;
 
     if (declaration.isValid)
         return translateType(declaration.type, rewriteIdToObjcObject);
-
-    else
-        return translateType(type.kind, rewriteIdToObjcObject);
+    else {
+        return translateType(type.canonicalType.kind, rewriteIdToObjcObject);
+    }
 }
 
 string translateConstantArray (Type type, bool rewriteIdToObjcObject)
