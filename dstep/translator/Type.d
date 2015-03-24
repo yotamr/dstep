@@ -60,6 +60,7 @@ body
                 break;
 
                 case CXType_ConstantArray: result = translateConstantArray(type, rewriteIdToObjcObject); break;
+                case CXType_IncompleteArray: result = translateIncompleteArray(type, rewriteIdToObjcObject); break;
                 case CXType_Unexposed: result = translateUnexposed(type, rewriteIdToObjcObject); break;
 
             default: result = translateType(type.kind, rewriteIdToObjcObject);
@@ -177,6 +178,20 @@ body
 
     return elementType ~ '[' ~ array.size.toString ~ ']';
 }
+
+string translateIncompleteArray (Type type, bool rewriteIdToObjcObject)
+in
+{
+    assert(type.kind == CXTypeKind.CXType_IncompleteArray);
+}
+body
+{
+    auto array = type.array;
+    auto elementType = translateType(array.elementType, rewriteIdToObjcObject);
+
+    return elementType ~ "[]";
+}
+
 
 string translatePointer (Type type, bool rewriteIdToObjcObject, bool applyConst)
 in
