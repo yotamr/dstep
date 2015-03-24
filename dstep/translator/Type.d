@@ -12,6 +12,7 @@ import mambo.core.io;
 import clang.c.Index;
 import clang.Type;
 
+import std.string : format;
 import std.conv : to;
 import dstep.translator.IncludeHandler;
 import dstep.translator.Translator;
@@ -104,6 +105,26 @@ string translateVector(Type type)
     return translateType(vector.elementType) ~ to!string(vector.getNumElements());
 }
 
+int[string] builtinTypesToCTypes;
+
+public bool builtinTypedef(Type type, string name)
+{
+    builtinTypesToCTypes = [
+        "ushort" : CXTypeKind.CXType_UShort,
+        "uint" : CXTypeKind.CXType_UInt,
+        "ulong" : CXTypeKind.CXType_ULong
+        ];
+    if (name in builtinTypesToCTypes) {
+        if (type.kind != builtinTypesToCTypes[name]) {
+            throw new Exception(format("Cannot typedef %s to builtin type %s - they are incompatible",
+                                       to!string(type.kind), name));
+        } else {
+            return true;
+        }
+    }
+
+    return false;
+}
 string translateTypedef (Type type)
 in
 {

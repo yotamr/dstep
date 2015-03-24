@@ -178,12 +178,17 @@ class Translator
 
     string typedef_ (Cursor cursor, String context = output)
     {
+        string prefix = "";
+        if (builtinTypedef(cursor.type.canonicalType, cursor.spelling)) {
+            prefix = "// ";
+        }
+
         context ~= "alias ";
         context ~= translateType(cursor.type.canonicalType);
         context ~= " " ~ cursor.spelling;
         context ~= ";";
 
-        return context.data;
+        return prefix ~ context.data;
     }
 
 private:
