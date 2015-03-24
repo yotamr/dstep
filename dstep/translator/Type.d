@@ -12,6 +12,7 @@ import mambo.core.io;
 import clang.c.Index;
 import clang.Type;
 
+import std.conv : to;
 import dstep.translator.IncludeHandler;
 import dstep.translator.Translator;
 import dstep.translator.Output;
@@ -44,6 +45,7 @@ body
             switch (type.kind)
             {
                 case CXType_Pointer: return translatePointer(type, rewriteIdToObjcObject, applyConst);
+                case CXType_Vector: return translateVector(type);
                 case CXType_Typedef: result = translateTypedef(type); break;
 
                 case CXType_Record:
@@ -94,6 +96,12 @@ string translateSelector (string str, bool fullName = false, bool translateIdent
 }
 
 private:
+
+string translateVector(Type type)
+{
+    VectorType vector = type.vector;
+    return translateType(vector.elementType) ~ to!string(vector.getNumElements());
+}
 
 string translateTypedef (Type type)
 in
@@ -274,7 +282,7 @@ string translateType (CXTypeKind kind, bool rewriteIdToObjcObject = true)
 
             case CXType_ULongLong: return "ulong";
             case CXType_UInt128: return "<uint128>";
-            case CXType_Char_S: return "char";
+            case CXType_Char_S: return "byte";
             case CXType_SChar: return "byte";
             case CXType_WChar: return "wchar";
             case CXType_Short: return "short";

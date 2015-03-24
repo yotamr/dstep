@@ -128,6 +128,10 @@ struct Type
     {
         return FuncType(this);
     }
+    @property VectorType vector ()
+    {
+        return VectorType(this);
+    }
 
     @property ArrayType array ()
     {
@@ -154,6 +158,23 @@ struct FuncType
     @property bool isVariadic ()
     {
         return clang_isFunctionTypeVariadic(type.cx) == 1;
+    }
+}
+
+struct VectorType
+{
+    Type type;
+    alias type this;
+
+    @property Type elementType ()
+    {
+        auto r = clang_getElementType(cx);
+        return Type(r);
+    }
+
+    @property auto getNumElements ()
+    {
+        return clang_getNumElements(cx);
     }
 }
 

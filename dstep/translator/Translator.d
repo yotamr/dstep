@@ -57,6 +57,11 @@ class Translator
         inputFile = translationUnit.file(inputFilename);
     }
 
+    void addCommonImports()
+    {
+        includeHandler.addImport("core.simd");
+    }
+
     void translate ()
     {
         foreach (cursor, parent ; translationUnit.declarations)
@@ -92,7 +97,7 @@ class Translator
 
         output.structs ~= deferredDeclarations.values;
         output.externDeclaration = externDeclaration();
-
+        addCommonImports();
         auto data = output.toString;
         write(outputFile, data);
     }
