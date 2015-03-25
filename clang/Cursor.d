@@ -85,6 +85,16 @@ struct Cursor
         return Visitor(this);
     }
 
+    @property bool isBitField ()
+    {
+        return cast(bool)clang_Cursor_isBitField(cx);
+    }
+
+    @property uint getBitFieldWidth ()
+    {
+        return clang_getFieldDeclBitWidth(cx);
+    }
+
     @property CXLanguageKind language ()
     {
         return clang_getCursorLanguage(cx);

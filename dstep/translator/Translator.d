@@ -60,6 +60,7 @@ class Translator
     void addCommonImports()
     {
         includeHandler.addImport("core.simd");
+        includeHandler.addImport("std.bitmanip");
     }
 
     void translate ()
